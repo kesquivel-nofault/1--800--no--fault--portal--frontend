@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky install",
+    "commit": "cz",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,scss,md,html,json}": [
@@ -69,7 +72,9 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
     "postcss": "^8.5.2",
+    "prettier": "^3.6.2",
     "sass-embedded": "^1.93.2",
     "tailwindcss": "^4.0.8",
     "typescript": "~5.7.2",

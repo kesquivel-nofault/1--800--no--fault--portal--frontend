@@ -18,3 +18,7 @@ format:
 	@echo "🎨 Formatting with Prettier..."
 	npx prettier --write .
 
+format-check:
+	@echo "🔍 Checking formatting with Prettier..."
+	npx prettier --check .
+
