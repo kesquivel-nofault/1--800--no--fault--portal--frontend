@@ -1,0 +1,80 @@
+name: 🛠 CI - Format, Lint and Build
+
+on:
+  pull_request:
+    branches:
+      - "**"
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: 🛠 CI - Format, Lint and Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: 🔍 Commit details (no PR)
+        if: ${{ github.head_ref == '' }}
+        env:
+          BRANCH: ${{ github.ref }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          echo "Running build for branch $BRANCH; commit: $COMMIT"
+
+      - name: 🔍 Commit details (PR)
+        if: ${{ github.head_ref != '' }}
+        env:
+          BRANCH: ${{ github.head_ref }}
+          PR: ${{ github.ref }}
+          COMMIT: ${{ github.event.after }}
+        run: |
+          echo "Running build for branch: $BRANCH; commit: $COMMIT; PR: $PR"
+
+      - name: 🧾 Full GitHub Actions context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: 🟡 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: 📦 Install root dependencies
+        run: npm install
+
+      - name: 🚦 Check Conventional Commit format
+        run: |
+          BASE=${{ github.base_ref }}
+          if [ -z "$BASE" ]; then
+            BASE=$(git rev-parse HEAD~1)
+          else
+            git fetch origin $BASE --depth=1
+            BASE=origin/$BASE
+          fi
+          commits=$(git log $BASE..HEAD --pretty=format:"%s")
+          echo "$commits" | npx commitlint
+
+      - name: 🛠 Build projects
+        run: npm run build
+
+      - name: ✨ Format check
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BASE="origin/${{ github.base_ref }}"
+            git fetch origin ${{ github.base_ref }} --depth=1
+          else
+            BASE=$(git rev-parse HEAD~1)
+          fi
+          npx nx format:check --base=$BASE
+
+      - name: 🧹 Lint check
+        run: npm run lint
