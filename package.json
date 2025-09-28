@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky install",
     "commit": "cz",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "npx prettier --check ."
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,css,scss,md,html,json}": [
