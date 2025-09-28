@@ -74,7 +74,7 @@ jobs:
           else
             BASE=$(git rev-parse HEAD~1)
           fi
-          npx nx format:check --base=$BASE
+          npx format:check --base=$BASE
 
       - name: 🧹 Lint check
         run: npm run lint
