@@ -1,131 +1,101 @@
 import type React from "react";
+import { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from "react-router-dom";
 
-import SignIn from "../modules/auth/ui/SignIn";
-import Doctor from "../modules/doctor-lawyer/ui/doctor/Doctor";
-import Lawyer from "../modules/doctor-lawyer/ui/lawyer/Lawyer";
-import Home from "../modules/home/ui/Home";
-import AppLayout from "../shared/ui/layout/AppLayout";
-import Blank from "../shared/ui/pages/Blank";
-import Calendar from "../shared/ui/pages/Calendar";
-import BarChart from "../shared/ui/pages/Charts/BarChart";
-import LineChart from "../shared/ui/pages/Charts/LineChart";
-import FormElements from "../shared/ui/pages/Forms/FormElements";
-import NotFound from "../shared/ui/pages/OtherPage/NotFound";
-import BasicTables from "../shared/ui/pages/Tables/BasicTables";
-import Alerts from "../shared/ui/pages/UiElements/Alerts";
-import Avatars from "../shared/ui/pages/UiElements/Avatars";
-import Badges from "../shared/ui/pages/UiElements/Badges";
-import Buttons from "../shared/ui/pages/UiElements/Buttons";
-import Images from "../shared/ui/pages/UiElements/Images";
-import Videos from "../shared/ui/pages/UiElements/Videos";
-import UserProfiles from "../shared/ui/pages/UserProfiles";
 import { PrivateRoute } from "./private-route";
 import { PublicRoute } from "./public-route";
 import { routes } from "./routes";
 
+import { ProgressSpinner } from "primereact/progressspinner";
+
+const SignIn = lazy(() => import("../modules/auth/ui/SignIn"));
+const Doctor = lazy(() => import("../modules/doctor-lawyer/ui/doctor/Doctor"));
+const Lawyer = lazy(() => import("../modules/doctor-lawyer/ui/lawyer/Lawyer"));
+const Home = lazy(() => import("../modules/home/ui/Home"));
+const AppLayout = lazy(() => import("../shared/ui/layout/AppLayout"));
+const Blank = lazy(() => import("../shared/ui/pages/Blank"));
+const Calendar = lazy(() => import("../shared/ui/pages/Calendar"));
+const BarChart = lazy(() => import("../shared/ui/pages/Charts/BarChart"));
+const LineChart = lazy(() => import("../shared/ui/pages/Charts/LineChart"));
+const FormElements = lazy(
+  () => import("../shared/ui/pages/Forms/FormElements"),
+);
+const NotFound = lazy(() => import("../shared/ui/pages/OtherPage/NotFound"));
+const BasicTables = lazy(() => import("../shared/ui/pages/Tables/BasicTables"));
+const Alerts = lazy(() => import("../shared/ui/pages/UiElements/Alerts"));
+const Avatars = lazy(() => import("../shared/ui/pages/UiElements/Avatars"));
+const Badges = lazy(() => import("../shared/ui/pages/UiElements/Badges"));
+const Buttons = lazy(() => import("../shared/ui/pages/UiElements/Buttons"));
+const Images = lazy(() => import("../shared/ui/pages/UiElements/Images"));
+const Videos = lazy(() => import("../shared/ui/pages/UiElements/Videos"));
+const UserProfiles = lazy(() => import("../shared/ui/pages/UserProfiles"));
+
+const withSuspense = (Component: React.ReactNode) => (
+  <Suspense
+    name="router-suspense"
+    fallback={
+      <section className="flex h-screen w-full items-center justify-center">
+        <ProgressSpinner
+          style={{ width: "50px", height: "50px" }}
+          strokeWidth="8"
+          fill="var(--surface-ground)"
+          animationDuration=".5s"
+          color="#1eb9cd"
+          className=""
+        />
+      </section>
+    }
+  >
+    {Component}
+  </Suspense>
+);
+
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
+    element: withSuspense(
       <PrivateRoute>
         <AppLayout />
-      </PrivateRoute>
+      </PrivateRoute>,
     ),
     children: [
       {
         index: true,
         element: <Navigate to={`/${routes.pages.home}`} replace />,
       },
-      {
-        path: routes.pages.home,
-        element: <Home />,
-      },
-
-      {
-        path: routes.pages.lawyers,
-        element: <Lawyer />,
-      },
-
-      {
-        path: routes.pages.doctors,
-        element: <Doctor />,
-      },
-
-      {
-        path: "profile",
-        element: <UserProfiles />,
-      },
-      {
-        path: "calendar",
-        element: <Calendar />,
-      },
-      {
-        path: "blank",
-        element: <Blank />,
-      },
-
-      {
-        path: "form-elements",
-        element: <FormElements />,
-      },
-
-      {
-        path: "basic-tables",
-        element: <BasicTables />,
-      },
-
-      {
-        path: "alerts",
-        element: <Alerts />,
-      },
-      {
-        path: "avatars",
-        element: <Avatars />,
-      },
-      {
-        path: "badge",
-        element: <Badges />,
-      },
-      {
-        path: "buttons",
-        element: <Buttons />,
-      },
-      {
-        path: "images",
-        element: <Images />,
-      },
-      {
-        path: "videos",
-        element: <Videos />,
-      },
-      {
-        path: "line-chart",
-        element: <LineChart />,
-      },
-      {
-        path: "bar-chart",
-        element: <BarChart />,
-      },
+      { path: routes.pages.home, element: withSuspense(<Home />) },
+      { path: routes.pages.lawyers, element: withSuspense(<Lawyer />) },
+      { path: routes.pages.doctors, element: withSuspense(<Doctor />) },
+      { path: "profile", element: withSuspense(<UserProfiles />) },
+      { path: "calendar", element: withSuspense(<Calendar />) },
+      { path: "blank", element: withSuspense(<Blank />) },
+      { path: "form-elements", element: withSuspense(<FormElements />) },
+      { path: "basic-tables", element: withSuspense(<BasicTables />) },
+      { path: "alerts", element: withSuspense(<Alerts />) },
+      { path: "avatars", element: withSuspense(<Avatars />) },
+      { path: "badge", element: withSuspense(<Badges />) },
+      { path: "buttons", element: withSuspense(<Buttons />) },
+      { path: "images", element: withSuspense(<Images />) },
+      { path: "videos", element: withSuspense(<Videos />) },
+      { path: "line-chart", element: withSuspense(<LineChart />) },
+      { path: "bar-chart", element: withSuspense(<BarChart />) },
     ],
   },
-
   {
     path: "/signin",
-    element: (
+    element: withSuspense(
       <PublicRoute>
         <SignIn />
-      </PublicRoute>
+      </PublicRoute>,
     ),
   },
-
   {
     path: "*",
-    element: <NotFound />,
+    element: withSuspense(<NotFound />),
   },
 ]);
 

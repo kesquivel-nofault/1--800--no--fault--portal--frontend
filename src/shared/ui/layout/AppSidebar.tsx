@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     visible: true,
   },
   {
-    icon: <GridIcon />,
+    icon: <ListIcon />,
     name: "Doctors & Lawyers",
     visible: true,
     subItems: [
