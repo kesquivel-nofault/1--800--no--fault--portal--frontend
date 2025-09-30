@@ -26,7 +26,7 @@ const Doctor = () => {
 
   return (
     <div>
-      <PageMeta title="Dcotor" description="Doctor page" />
+      <PageMeta title="Doctor" description="Doctor page" />
       <PageBreadcrumb pageTitle="Doctor" />
 
       <GenericTable
