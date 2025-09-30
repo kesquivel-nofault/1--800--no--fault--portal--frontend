@@ -90,7 +90,6 @@ const Input: FC<InputProps> = ({
     );
   }
 
-  // Si no viene control, funciona como input normal
   return (
     <div className="relative">
       <input

@@ -1,26 +1,86 @@
+import { useState } from "react";
+import { useModal } from "../../../../hooks/useModal";
 import PageBreadcrumb from "../../../../shared/ui/components/common/PageBreadCrumb";
 import PageMeta from "../../../../shared/ui/components/common/PageMeta";
+import { GenericTable } from "../../../../shared/ui/components/tables/BasicTables/BasicTableOne";
+import Badge from "../../../../shared/ui/components/ui/badge/Badge";
+import { Modal } from "../../../../shared/ui/components/ui/modal";
+import { LawyerStatus } from "../../domain/interfaces/lawyers/lawyer.criteria";
+import { Lawyer as Lw } from "../../domain/interfaces/lawyers/lawyer.interface";
+import { mockTreatmentCases } from "../../infrastructure/mocks/mock-lawyers";
+import LawyerForm from "./LawyerForm";
 
 const Lawyer = () => {
+  const { isOpen, openModal, closeModal } = useModal();
+  const [selectedRow, setSelectedRow] = useState<Lw | null>(null);
+
+  const handleSave = (lawyer: Lw) => {
+    console.log(lawyer);
+    closeModal();
+  };
+
+  const options = [
+    { value: LawyerStatus.ACTIVE, label: LawyerStatus.ACTIVE },
+    { value: LawyerStatus.ACTIVE, label: LawyerStatus.ACTIVE },
+    { value: LawyerStatus.PENDING, label: LawyerStatus.PENDING },
+  ];
   return (
     <div>
-      <PageMeta
-        title="React.js Blank Dashboard | TailAdmin - Next.js Admin Dashboard Template"
-        description="This is React.js Blank Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
-      />
+      <PageMeta title="Lawyer" description="This is Lawyer page" />
       <PageBreadcrumb pageTitle="Lawyer" />
-      <div className="h-full rounded-2xl border border-gray-200 bg-white px-5 py-7 dark:border-gray-800 dark:bg-white/[0.03] xl:px-10 xl:py-12">
-        <div className="mx-auto w-full max-w-[630px] text-center">
-          <h3 className="mb-4 font-semibold text-gray-800 text-theme-xl dark:text-white/90 sm:text-2xl">
-            Card Title Here
-          </h3>
+      <GenericTable
+        data={mockTreatmentCases}
+        pageSize={10}
+        title="Doctor Cases"
+        columns={[
+          { key: "caseId", header: "Case ID", filter: { type: "text" } },
+          {
+            key: "txLocation",
+            header: "Tx Location",
+            filter: {
+              type: "text",
+            },
+          },
+          { key: "name", header: "Name", filter: { type: "text" } },
+          {
+            key: "status",
+            header: "Status",
+            filter: {
+              type: "select",
+              options: ["SIGNED", "PENDING", "CLOSED"],
+              multi: true,
+            },
+            render: (row) => (
+              <Badge
+                size="sm"
+                color={
+                  row.status === "ACTIVE"
+                    ? "success"
+                    : row.status === "PENDING"
+                      ? "warning"
+                      : "error"
+                }
+              >
+                {row.status}
+              </Badge>
+            ),
+          },
+        ]}
+        onRowClick={(row) => {
+          setSelectedRow(row);
+          openModal();
+        }}
+      />
 
-          <p className="text-sm text-gray-500 dark:text-gray-400 sm:text-base">
-            Start putting content on grids or panels, you can also use different
-            combinations of grids.Please check out the dashboard and other pages
-          </p>
-        </div>
-      </div>
+      <Modal isOpen={isOpen} onClose={closeModal} className="max-w-[700px] m-4">
+        <LawyerForm
+          lawyer={selectedRow}
+          options={options}
+          onSave={handleSave}
+          onCancel={closeModal}
+          setLawyer={setSelectedRow}
+        />
+      </Modal>
     </div>
   );
 };
