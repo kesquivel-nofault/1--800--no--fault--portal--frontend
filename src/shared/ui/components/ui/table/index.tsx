@@ -19,7 +19,7 @@ interface TableBodyProps {
 }
 
 // Props for TableRow
-interface TableRowProps {
+interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   children: ReactNode; // Cells (th or td)
   className?: string; // Optional className for styling
 }
@@ -46,10 +46,19 @@ const TableBody: React.FC<TableBodyProps> = ({ children, className }) => {
   return <tbody className={className}>{children}</tbody>;
 };
 
-// TableRow Component
-const TableRow: React.FC<TableRowProps> = ({ children, className }) => {
-  return <tr className={className}>{children}</tr>;
+const TableRow: React.FC<TableRowProps> = ({
+  children,
+  className,
+  ...props
+}) => {
+  return (
+    <tr {...props} className={className}>
+      {children}
+    </tr>
+  );
 };
+
+export default TableRow;
 
 // TableCell Component
 const TableCell: React.FC<TableCellProps> = ({
@@ -61,4 +70,4 @@ const TableCell: React.FC<TableCellProps> = ({
   return <CellTag className={` ${className}`}>{children}</CellTag>;
 };
 
-export { Table, TableHeader, TableBody, TableRow, TableCell };
+export { Table, TableBody, TableCell, TableHeader, TableRow };
