@@ -21,7 +21,7 @@ const Lawyer = () => {
 
   const options = [
     { value: LawyerStatus.ACTIVE, label: LawyerStatus.ACTIVE },
-    { value: LawyerStatus.ACTIVE, label: LawyerStatus.ACTIVE },
+    { value: LawyerStatus.INACTIVE, label: LawyerStatus.INACTIVE },
     { value: LawyerStatus.PENDING, label: LawyerStatus.PENDING },
   ];
   return (
@@ -47,7 +47,11 @@ const Lawyer = () => {
             header: "Status",
             filter: {
               type: "select",
-              options: ["SIGNED", "PENDING", "CLOSED"],
+              options: [
+                LawyerStatus.ACTIVE,
+                LawyerStatus.INACTIVE,
+                LawyerStatus.PENDING,
+              ],
               multi: true,
             },
             render: (row) => (
