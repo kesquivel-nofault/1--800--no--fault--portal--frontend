@@ -16,8 +16,12 @@
     color: #e4e7ec !important;
   }
 
+  .p-multiselect .p-multiselect-label {
+    padding: 0 !important;
+  }
+
   .p-multiselect-label {
-    color: #9ca3af;
+    color: #667085 !important;
     font-family: "outfit";
   }
   &.p-multiselect-chip {
